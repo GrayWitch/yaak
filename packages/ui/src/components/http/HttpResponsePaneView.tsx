@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Suspense, useMemo } from "react";
+import { t } from "@yaakapp-internal/lib";
 import { getMimeTypeFromContentType } from "../../lib/mimeType";
 import { Banner } from "../Banner";
 import { CountBadge } from "../CountBadge";
@@ -142,7 +143,7 @@ export function HttpResponsePaneView({
       ...(onSaveBody != null
         ? [
             {
-              label: "Save to File",
+              label: t("response.view.saveBody", "Save to File"),
               onSelect: onSaveBody,
               leftSlot: <Icon icon="save" />,
               hidden: bodyActionsHidden,
@@ -153,7 +154,7 @@ export function HttpResponsePaneView({
       ...(onCopyBody != null
         ? [
             {
-              label: "Copy Body",
+              label: t("response.view.copyBody", "Copy Body"),
               onSelect: onCopyBody,
               leftSlot: <Icon icon="copy" />,
               hidden: bodyActionsHidden,
@@ -169,17 +170,23 @@ export function HttpResponsePaneView({
     const headerCount = response?.headers.length ?? 0;
     return [
       onViewModeChange == null && itemsAfter.length === 0
-        ? (bodyTab ?? { value: RESPONSE_TAB_BODY, label: "Response" })
+        ? (bodyTab ?? { value: RESPONSE_TAB_BODY, label: t("response.tabs.body", "Response") })
         : {
             value: RESPONSE_TAB_BODY,
             options: {
               value: viewMode,
               onChange: (v: string | null) => onViewModeChange?.(v === "raw" ? "raw" : "pretty"),
               items: [
-                { label: "Response", value: "pretty" },
+                { label: t("response.tabs.body", "Response"), value: "pretty" },
                 ...(onViewModeChange == null || mimeType?.startsWith("image")
                   ? []
-                  : [{ label: "Response (Raw)", shortLabel: "Raw", value: "raw" }]),
+                  : [
+                      {
+                        label: `${t("response.tabs.body", "Response")} (${t("response.view.raw", "Raw")})`,
+                        shortLabel: t("response.view.raw", "Raw"),
+                        value: "raw",
+                      },
+                    ]),
               ],
               itemsAfter: itemsAfter.length > 0 ? itemsAfter : undefined,
             },
@@ -189,14 +196,14 @@ export function HttpResponsePaneView({
         : [
             {
               value: RESPONSE_TAB_REQUEST,
-              label: "Request",
+              label: t("common.request", "Request"),
               rightSlot:
                 (response?.requestContentLength ?? 0) > 0 ? <CountBadge count={true} /> : null,
             },
           ]),
       {
         value: RESPONSE_TAB_HEADERS,
-        label: "Headers",
+        label: t("response.tabs.headers", "Headers"),
         rightSlot: requestShownApart ? (
           <CountBadge count={headerCount} />
         ) : (
@@ -205,7 +212,7 @@ export function HttpResponsePaneView({
       },
       {
         value: RESPONSE_TAB_COOKIES,
-        label: "Cookies",
+        label: t("response.tabs.cookies", "Cookies"),
         rightSlot: requestShownApart ? (
           <CountBadge count={cookieCounts.received} />
         ) : cookieCounts.sent > 0 || cookieCounts.received > 0 ? (

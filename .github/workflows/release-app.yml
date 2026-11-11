@@ -19,7 +19,7 @@ on:
 
 jobs:
   build-artifacts:
-    if: github.repository == 'mountain-loop/yaak' && github.event_name == 'push'
+    if: (github.repository == 'mountain-loop/yaak' || github.repository == 'GrayWitch/yaak') && github.event_name == 'push'
     permissions:
       contents: write
 

@@ -14,6 +14,7 @@ import { useAtomValue } from "jotai";
 import { useKeyPressEvent } from "react-use";
 import { appInfo } from "../../lib/appInfo";
 import { capitalize } from "../../lib/capitalize";
+import { useTranslation } from "../../lib/i18n";
 import { SettingsAgents } from "./SettingsAgents";
 import { SettingsCertificates } from "./SettingsCertificates";
 import { SettingsGeneral } from "./SettingsGeneral";
@@ -54,6 +55,7 @@ export type SettingsTab = (typeof tabs)[number];
 export type SettingsTabWithSubtab = SettingsTab | `${SettingsTab}:${string}`;
 
 export default function Settings({ tab, hide }: Props) {
+  const { t } = useTranslation();
   // Parse tab and subtab (e.g., "plugins:installed")
   const [mainTab, subtab] = tab?.split(":") ?? [];
   const settings = useAtomValue(settingsAtom);
@@ -116,7 +118,11 @@ export default function Settings({ tab, hide }: Props) {
               interfaceScale: settings.interfaceScale,
             }
       }
-      tabs={tabs.map((value) => ({ value, label: capitalize(value), ...tabDefs[value] }))}
+      tabs={tabs.map((value) => ({
+        value,
+        label: t(`settings.tabs.${value}`, capitalize(value)),
+        ...tabDefs[value],
+      }))}
     />
   );
 }

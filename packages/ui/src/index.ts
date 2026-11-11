@@ -286,6 +286,15 @@ export type { TextFilterApi } from "./hooks/useTextFilter";
 export { useTextFilter } from "./hooks/useTextFilter";
 export { useTimedBoolean } from "./hooks/useTimedBoolean";
 export { useToggle } from "./hooks/useToggle";
+export {
+  getLanguage,
+  getResolvedLanguage,
+  setLanguage,
+  subscribeLanguage,
+  SUPPORTED_LANGUAGES,
+  t,
+  useTranslation,
+} from "./hooks/useTranslation";
 export { clamp } from "./lib/clamp";
 export { HEADER_SIZE_LG, HEADER_SIZE_MD, WINDOW_CONTROLS_WIDTH } from "./lib/constants";
 export { languageFromContent, languageFromContentType } from "./lib/contentType";

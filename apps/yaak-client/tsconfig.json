@@ -16,6 +16,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
+      "@yaakapp-internal/lib": ["../../packages/common-lib/index.ts"],
+      "@yaakapp-internal/lib/*": ["../../packages/common-lib/*"],
       "@yaakapp-internal/theme": ["../../packages/theme/src/index.ts"],
       "@yaakapp-internal/theme/*": ["../../packages/theme/src/*"],
       "@yaakapp-internal/ui": ["../../packages/ui/src/index.ts"],

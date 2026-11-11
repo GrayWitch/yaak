@@ -6,6 +6,7 @@ import { createFolder } from "../commands/commands";
 import type { DropdownItem } from "../components/core/Dropdown";
 import { Icon } from "@yaakapp-internal/ui";
 import { createRequestAndNavigate } from "../lib/createRequestAndNavigate";
+import { t } from "../lib/i18n";
 import { BODY_TYPE_GRAPHQL } from "../lib/model_util";
 import { activeRequestAtom } from "./useActiveRequest";
 import { activeWorkspaceIdAtom } from "./useActiveWorkspace";
@@ -104,7 +105,7 @@ export function getCreateDropdownItems({
       : [
           { type: "separator" },
           {
-            label: "Folder",
+            label: t("common.folder", "Folder"),
             leftSlot: hideIcons ? undefined : <Icon icon="plus" />,
             onSelect: async () => {
               const id = await createFolder.mutateAsync({ folderId });

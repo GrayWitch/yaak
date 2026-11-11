@@ -33,6 +33,7 @@ import { useRecentWorkspaces } from "../hooks/useRecentWorkspaces";
 import { useScrollIntoView } from "../hooks/useScrollIntoView";
 import { useSendAnyHttpRequest } from "../hooks/useSendAnyHttpRequest";
 import { useSidebarHidden } from "../hooks/useSidebarHidden";
+import { useTranslation } from "../lib/i18n";
 import { appInfo } from "../lib/appInfo";
 import { copyToClipboard } from "../lib/copy";
 import { createRequestAndNavigate } from "../lib/createRequestAndNavigate";
@@ -66,6 +67,7 @@ type CommandPaletteItem = {
 const MAX_PER_GROUP = 8;
 
 export function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const [command, setCommand] = useDebouncedState<string>("", 150);
   const [selectedItemKey, setSelectedItemKey] = useState<string | null>(null);
   const activeEnvironment = useActiveEnvironment();
@@ -95,44 +97,44 @@ export function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
     const commands: CommandPaletteItem[] = [
       {
         key: "settings.open",
-        label: "Open Settings",
+        label: t("commands.openSettings", "Open Settings"),
         action: "settings.show",
         onSelect: () => openSettings.mutate(null),
       },
       {
         key: "workspace_settings.open",
-        label: "Open Workspace Settings",
+        label: t("workspace.workspaceSettings", "Open Workspace Settings"),
         action: "workspace_settings.show",
         onSelect: () => openWorkspaceSettings(),
       },
       {
         key: "app.create",
-        label: "Create Workspace",
+        label: t("workspace.newWorkspace", "Create Workspace"),
         onSelect: createWorkspace,
       },
       {
         key: "model.create",
-        label: "Create HTTP Request",
+        label: t("commands.newHttpRequest", "Create HTTP Request"),
         onSelect: () => createRequestAndNavigate({ model: "http_request", workspaceId }),
       },
       {
         key: "grpc_request.create",
-        label: "Create GRPC Request",
+        label: t("commands.newGrpcRequest", "Create GRPC Request"),
         onSelect: () => createRequestAndNavigate({ model: "grpc_request", workspaceId }),
       },
       {
         key: "websocket_request.create",
-        label: "Create Websocket Request",
+        label: t("commands.newWebsocketRequest", "Create Websocket Request"),
         onSelect: () => createRequestAndNavigate({ model: "websocket_request", workspaceId }),
       },
       {
         key: "folder.create",
-        label: "Create Folder",
+        label: t("commands.newFolder", "Create Folder"),
         onSelect: () => createFolder.mutate({}),
       },
       {
         key: "cookies.show",
-        label: "Show Cookies",
+        label: t("workspace.manageCookies", "Show Cookies"),
         action: "cookies_editor.show",
         onSelect: async () => {
           CookieDialog.show(activeCookieJar?.id ?? null);
@@ -438,7 +440,7 @@ export function CommandPaletteDialog({ onClose }: { onClose: () => void }) {
           }
           name="command"
           label="Command"
-          placeholder="Search or type a command"
+          placeholder={t("commands.commandPalettePlaceholder", "Search or type a command")}
           className="font-sans text-base!"
           defaultValue={command}
           onChange={handleSetCommand}

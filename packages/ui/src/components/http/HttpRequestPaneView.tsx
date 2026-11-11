@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import type { CSSProperties, ReactNode, Ref } from "react";
 import { useMemo } from "react";
+import { t } from "@yaakapp-internal/lib";
 import { languageFromContentType } from "../../lib/contentType";
 import { CountBadge } from "../CountBadge";
 import { EmptyStateText } from "../EmptyStateText";
@@ -199,12 +200,12 @@ export function HttpRequestPaneView({
       {
         value: REQUEST_TAB_PARAMS,
         rightSlot: <CountBadge count={paramPairs.length} />,
-        label: "Params",
+        label: t("request.tabs.params", "Params"),
       },
       ...(headersTabs ?? [
         {
           value: REQUEST_TAB_HEADERS,
-          label: "Headers",
+          label: t("request.tabs.headers", "Headers"),
           rightSlot: <CountBadge count={headerCount} />,
         },
       ]),
@@ -467,16 +468,16 @@ export function bodyTypeLabel(bodyType: string | null, contentType: string | nul
     case BODY_TYPE_GRAPHQL:
       return "GraphQL";
     case BODY_TYPE_FORM_URLENCODED:
-      return "Url Encoded";
+      return t("request.body.formUrlencoded", "Url Encoded");
     case BODY_TYPE_FORM_MULTIPART:
-      return "Multi-Part";
+      return t("request.body.multipart", "Multi-Part");
     case BODY_TYPE_BINARY:
-      return "Binary";
+      return t("request.body.binary", "Binary");
     case BODY_TYPE_OTHER:
       return languageFromContentType(contentType) === "markdown" ? "Markdown" : "Other";
     case null:
-      return "Body";
+      return t("request.tabs.body", "Body");
     default:
-      return "Body";
+      return t("request.tabs.body", "Body");
   }
 }

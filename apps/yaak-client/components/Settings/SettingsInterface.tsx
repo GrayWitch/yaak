@@ -6,12 +6,14 @@ import { useAtomValue } from "jotai";
 import { activeWorkspaceAtom } from "../../hooks/useActiveWorkspace";
 import { useSettingsView } from "../../hooks/useSettingsView";
 import { showConfirm } from "../../lib/confirm";
+import { useTranslation, type Language } from "../../lib/i18n";
 import { pricingUrl } from "../../lib/pricingUrl";
 import { CargoFeature } from "../CargoFeature";
 import { Link } from "../core/Link";
 import { SettingRowBoolean, SettingRowSelect, SettingsSection } from "../core/SettingRow";
 
 export function SettingsInterface() {
+  const { t, language, setLanguage, languages } = useTranslation();
   const workspace = useAtomValue(activeWorkspaceAtom);
   const settings = useAtomValue(settingsAtom);
   const bound = useSettingsView();
@@ -25,30 +27,56 @@ export function SettingsInterface() {
       view={bound.view}
       callbacks={bound.callbacks}
       leadingSections={
-        <SettingsSection title="Workspaces">
-          <SettingRowSelect
-            title="Open workspace behavior"
-            description="Choose what happens when opening another workspace."
-            name="switchWorkspaceBehavior"
-            value={
-              settings.openWorkspaceNewWindow === true
-                ? "new"
-                : settings.openWorkspaceNewWindow === false
-                  ? "current"
-                  : "ask"
-            }
-            onChange={async (v) => {
-              if (v === "current") await patchModel(settings, { openWorkspaceNewWindow: false });
-              else if (v === "new") await patchModel(settings, { openWorkspaceNewWindow: true });
-              else await patchModel(settings, { openWorkspaceNewWindow: null });
-            }}
-            options={[
-              { label: "Always ask", value: "ask" },
-              { label: "Open in current window", value: "current" },
-              { label: "Open in new window", value: "new" },
-            ]}
-          />
-        </SettingsSection>
+        <>
+          <SettingsSection title={t("settings.interface.language", "Language")}>
+            <SettingRowSelect
+              title={t("settings.interface.interfaceLanguage", "Interface Language")}
+              description={t(
+                "settings.interface.interfaceLanguageDesc",
+                "Choose your preferred display language for Yaak.",
+              )}
+              name="interfaceLanguage"
+              value={language}
+              onChange={async (v) => {
+                setLanguage(v as Language);
+              }}
+              options={languages.map((opt) => ({
+                label: opt.label,
+                value: opt.value,
+              }))}
+            />
+          </SettingsSection>
+          <SettingsSection title={t("settings.interface.workspaces", "Workspaces")}>
+            <SettingRowSelect
+              title={t("settings.interface.openWorkspaceBehavior", "Open workspace behavior")}
+              description={t(
+                "settings.interface.openWorkspaceBehaviorDesc",
+                "Choose what happens when opening another workspace.",
+              )}
+              name="switchWorkspaceBehavior"
+              value={
+                settings.openWorkspaceNewWindow === true
+                  ? "new"
+                  : settings.openWorkspaceNewWindow === false
+                    ? "current"
+                    : "ask"
+              }
+              onChange={async (v) => {
+                if (v === "current") await patchModel(settings, { openWorkspaceNewWindow: false });
+                else if (v === "new") await patchModel(settings, { openWorkspaceNewWindow: true });
+                else await patchModel(settings, { openWorkspaceNewWindow: null });
+              }}
+              options={[
+                { label: t("settings.interface.workspaceAsk", "Always ask"), value: "ask" },
+                {
+                  label: t("settings.interface.workspaceCurrent", "Open in current window"),
+                  value: "current",
+                },
+                { label: t("settings.interface.workspaceNew", "Open in new window"), value: "new" },
+              ]}
+            />
+          </SettingsSection>
+        </>
       }
       trailingSections={
         <CargoFeature feature="license">

@@ -5,6 +5,7 @@ import { useCheckForUpdates } from "../hooks/useCheckForUpdates";
 import { useExportData } from "../hooks/useExportData";
 import { appInfo } from "../lib/appInfo";
 import { showDialog } from "../lib/dialog";
+import { useTranslation } from "../lib/i18n";
 import { importData } from "../lib/importData";
 import { pricingUrl } from "../lib/pricingUrl";
 import type { DropdownRef } from "./core/Dropdown";
@@ -15,6 +16,7 @@ import { KeyboardShortcutsDialog } from "./KeyboardShortcutsDialog";
 import { platform } from "@yaakapp-internal/platform";
 
 export function SettingsDropdown() {
+  const { t } = useTranslation();
   const exportData = useExportData();
   const dropdownRef = useRef<DropdownRef>(null);
   const checkForUpdates = useCheckForUpdates();
@@ -25,54 +27,54 @@ export function SettingsDropdown() {
       ref={dropdownRef}
       items={[
         {
-          label: "Settings",
+          label: t("menu.settings", "Settings"),
           hotKeyAction: "settings.show",
           leftSlot: <Icon icon="settings" />,
           onSelect: () => openSettings.mutate(null),
         },
         {
-          label: "Keyboard shortcuts",
+          label: t("menu.shortcuts", "Keyboard shortcuts"),
           hotKeyAction: "hotkeys.showHelp",
           leftSlot: <Icon icon="keyboard" />,
           onSelect: () => {
             showDialog({
               id: "hotkey",
-              title: "Keyboard Shortcuts",
+              title: t("menu.shortcuts", "Keyboard Shortcuts"),
               size: "dynamic",
               render: () => <KeyboardShortcutsDialog />,
             });
           },
         },
         {
-          label: "Plugins",
+          label: t("menu.plugins", "Plugins"),
           leftSlot: <Icon icon="puzzle" />,
           onSelect: () => openSettings.mutate("plugins"),
         },
-        { type: "separator", label: "Share Workspace(s)" },
+        { type: "separator", label: t("menu.shareWorkspace", "Share Workspace(s)") },
         {
-          label: "Import Data",
+          label: t("menu.importData", "Import Data"),
           leftSlot: <Icon icon="folder_input" />,
           onSelect: () => importData.mutate(),
         },
         {
-          label: "Export Data",
+          label: t("menu.exportData", "Export Data"),
           leftSlot: <Icon icon="folder_output" />,
           onSelect: () => exportData.mutate(),
         },
         {
-          label: "Create Run Button",
+          label: t("menu.createRunButton", "Create Run Button"),
           leftSlot: <Icon icon="rocket" />,
           onSelect: () => platform.openUrl("https://yaak.app/button/new"),
         },
         { type: "separator", label: `Yaak v${appInfo.version}` },
         {
-          label: "Check for Updates",
+          label: t("menu.checkForUpdates", "Check for Updates"),
           leftSlot: <Icon icon="update" />,
           hidden: !appInfo.featureUpdater,
           onSelect: () => checkForUpdates.mutate(),
         },
         {
-          label: "Purchase License",
+          label: t("menu.purchaseLicense", "Purchase License"),
           color: "success",
           hidden: check.data == null || check.data.status === "active",
           leftSlot: <Icon icon="circle_dollar_sign" />,
@@ -81,19 +83,19 @@ export function SettingsDropdown() {
             platform.openUrl(pricingUrl(`app.menu.purchase.${check.data?.status ?? "unknown"}`)),
         },
         {
-          label: "Install CLI",
+          label: t("menu.installCli", "Install CLI"),
           hidden: appInfo.cliVersion != null || !platform.capabilities.agents,
           leftSlot: <Icon icon="square_terminal" />,
           onSelect: () => openSettings.mutate("agents"),
         },
         {
-          label: "Feedback",
+          label: t("menu.feedback", "Feedback"),
           leftSlot: <Icon icon="chat" />,
           rightSlot: <Icon icon="external_link" color="secondary" />,
           onSelect: () => platform.openUrl("https://yaak.app/feedback"),
         },
         {
-          label: "Changelog",
+          label: t("menu.changelog", "Changelog"),
           leftSlot: <Icon icon="cake" />,
           rightSlot: <Icon icon="external_link" color="secondary" />,
           onSelect: () => platform.openUrl(`https://yaak.app/changelog/${appInfo.version}`),

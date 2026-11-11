@@ -8,7 +8,12 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@yaakapp-internal/lib": ["../common-lib/index.ts"],
+      "@yaakapp-internal/lib/*": ["../common-lib/*"]
+    }
   },
   "include": ["src"]
 }

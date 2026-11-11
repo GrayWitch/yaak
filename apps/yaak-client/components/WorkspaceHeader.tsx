@@ -5,6 +5,7 @@ import { memo } from "react";
 import { activeWorkspaceAtom, activeWorkspaceMetaAtom } from "../hooks/useActiveWorkspace";
 import { useToggleCommandPalette } from "../hooks/useToggleCommandPalette";
 import { workspaceLayoutAtom } from "../lib/atoms";
+import { useTranslation } from "../lib/i18n";
 import { setupOrConfigureEncryption } from "../lib/setupOrConfigureEncryption";
 import { CookieDropdown } from "./CookieDropdown";
 import { IconButton } from "./core/IconButton";
@@ -26,6 +27,7 @@ export const WorkspaceHeader = memo(function WorkspaceHeader({
   className,
   floatingSidebar,
 }: Props) {
+  const { t } = useTranslation();
   const togglePalette = useToggleCommandPalette();
   const [workspaceLayout, setWorkspaceLayout] = useAtom(workspaceLayoutAtom);
   const workspace = useAtomValue(activeWorkspaceAtom);
@@ -81,7 +83,7 @@ export const WorkspaceHeader = memo(function WorkspaceHeader({
         />
         <IconButton
           icon="search"
-          title="Search or execute a command"
+          title={t("commands.commandPalettePlaceholder", "Search or execute a command")}
           size="sm"
           hotkeyAction="command_palette.toggle"
           iconColor="secondary"

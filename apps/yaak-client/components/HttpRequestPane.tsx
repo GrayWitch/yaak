@@ -39,6 +39,7 @@ import { derivePathPlaceholderPairs, renamePathPlaceholder } from "../lib/pathPl
 import { prepareImportQuerystring } from "../lib/prepareImportQuerystring";
 import { convertRequestBody } from "../lib/requestBodyConversion";
 import { resolvedModelName } from "../lib/resolvedModelName";
+import { t } from "../lib/i18n";
 import { showToast } from "../lib/toast";
 import { BinaryFileEditor } from "./BinaryFileEditor";
 import { ConfirmLargeRequestBody } from "./ConfirmLargeRequestBody";
@@ -339,7 +340,7 @@ export function HttpRequestPane({ style, fullHeight, className, activeRequest }:
       {
         tab: {
           value: TAB_SETTINGS,
-          label: "Settings",
+          label: t("settings.title", "Settings"),
           rightSlot: <CountBadge count={numSettingsOverrides} />,
         },
         content: <ModelSettingsEditor model={activeRequest} />,
@@ -347,7 +348,7 @@ export function HttpRequestPane({ style, fullHeight, className, activeRequest }:
       {
         tab: {
           value: TAB_DESCRIPTION,
-          label: "Info",
+          label: t("response.tabs.info", "Info"),
           rightSlot: hasDescription && <CountBadge count={true} />,
         },
         content: (

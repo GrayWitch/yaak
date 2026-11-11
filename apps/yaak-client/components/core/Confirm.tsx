@@ -1,6 +1,7 @@
 import type { Color } from "@yaakapp-internal/plugins";
 import type { FormEvent } from "react";
 import { useId, useState } from "react";
+import { useTranslation } from "../../lib/i18n";
 import { CopyIconButton } from "../CopyIconButton";
 import { DialogFooter } from "./Dialog";
 import { PlainInput } from "./PlainInput";
@@ -20,6 +21,7 @@ export function Confirm({
   requireTyping,
   color = "primary",
 }: ConfirmProps) {
+  const { t } = useTranslation();
   const [confirm, setConfirm] = useState<string>("");
   const formId = useId();
   const handleHide = () => {
@@ -64,9 +66,9 @@ export function Confirm({
       <DialogFooter
         inline
         actions={[
-          { label: "Cancel", onClick: handleHide },
+          { label: t("common.cancel", "Cancel"), onClick: handleHide },
           {
-            label: confirmText ?? "Confirm",
+            label: confirmText ?? t("common.confirm", "Confirm"),
             color,
             form: formId,
             disabled: !didConfirm,

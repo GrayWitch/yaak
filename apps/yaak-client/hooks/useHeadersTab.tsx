@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { TabItem } from "../components/core/Tabs/Tabs";
+import { t } from "../lib/i18n";
 import type { HeaderModel } from "./useInheritedHeaders";
 import { useInheritedHeaders } from "./useInheritedHeaders";
 import { CountBadge } from "@yaakapp-internal/ui";
@@ -22,7 +23,7 @@ export function useHeadersTab<T extends string>(
 
     const tab: TabItem = {
       value: tabValue,
-      label: label ?? "Headers",
+      label: label ?? t("request.tabs.headers", "Headers"),
       rightSlot: <CountBadge count={numHeaders} />,
     };
 

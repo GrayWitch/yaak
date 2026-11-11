@@ -49,6 +49,7 @@ import { getModelAncestors } from "../hooks/useModelAncestors";
 import { sendAnyHttpRequest } from "../hooks/useSendAnyHttpRequest";
 import { useSidebarHidden } from "../hooks/useSidebarHidden";
 import { getWebsocketRequestActions } from "../hooks/useWebsocketRequestActions";
+import { useTranslation } from "../lib/i18n";
 import { deepEqualAtom } from "../lib/atoms";
 import { showConfirm } from "../lib/confirm";
 import { deleteModelWithConfirm } from "../lib/deleteModelWithConfirm";
@@ -106,6 +107,7 @@ function isSidebarLeafModel(m: AnyModel): boolean {
 const OPACITY_SUBTLE = "opacity-80";
 
 function Sidebar({ className }: { className?: string }) {
+  const { t } = useTranslation();
   const [hidden, setHidden] = useSidebarHidden();
   const activeWorkspaceId = useAtomValue(activeWorkspaceAtom)?.id;
   const treeId = `tree.${activeWorkspaceId ?? "unknown"}`;
@@ -419,13 +421,13 @@ function Sidebar({ className }: { className?: string }) {
 
       const initialItems: ContextMenuProps["items"] = [
         {
-          label: "Folder Settings",
+          label: t("sidebar.folderSettings", "Folder Settings"),
           hidden: !(items.length === 1 && child.model === "folder"),
           leftSlot: <Icon icon="folder_cog" />,
           onSelect: () => openFolderSettings(child.id),
         },
         {
-          label: "Send",
+          label: t("common.send", "Send"),
           hotKeyAction: "request.send",
           hotKeyLabelOnly: true,
           hidden: !onlyHttpRequests,
@@ -497,7 +499,7 @@ function Sidebar({ className }: { className?: string }) {
         ...gitItems,
         { type: "separator", hidden: gitItems.length === 0 },
         {
-          label: "Rename",
+          label: t("common.rename", "Rename"),
           leftSlot: <Icon icon="pencil" />,
           hidden: items.length > 1,
           hotKeyAction: "sidebar.selected.rename",
@@ -505,14 +507,17 @@ function Sidebar({ className }: { className?: string }) {
           onSelect: () => handleRenameSelected(items),
         },
         {
-          label: "Duplicate",
+          label: t("common.duplicate", "Duplicate"),
           hotKeyAction: "model.duplicate",
           hotKeyLabelOnly: true, // Would trigger for every request (bad)
           leftSlot: <Icon icon="copy" />,
           onSelect: () => handleDuplicateSelected(items),
         },
         {
-          label: items.length <= 1 ? "Move" : `Move ${requestItems.length} Requests`,
+          label:
+            items.length <= 1
+              ? t("common.move", "Move")
+              : `${t("common.move", "Move")} ${requestItems.length} Requests`,
           hotKeyAction: "sidebar.selected.move",
           hotKeyLabelOnly: true,
           leftSlot: <Icon icon="arrow_right_circle" />,
@@ -524,7 +529,7 @@ function Sidebar({ className }: { className?: string }) {
         },
         {
           color: "danger",
-          label: "Delete",
+          label: t("common.delete", "Delete"),
           hotKeyAction: "sidebar.selected.delete",
           hotKeyLabelOnly: true,
           leftSlot: <Icon icon="trash" />,
@@ -583,7 +588,7 @@ function Sidebar({ className }: { className?: string }) {
               size="sm"
               label="filter"
               language={null} // Explicitly disable
-              placeholder="Search"
+              placeholder={t("common.search", "Search")}
               onChange={handleFilterChange}
               defaultValue={filterText.text}
               forceUpdateKey={filterText.key}
@@ -596,7 +601,7 @@ function Sidebar({ className }: { className?: string }) {
                   <IconButton
                     className="bg-transparent! h-auto! min-h-full opacity-50 hover:opacity-100 -mr-1"
                     icon="x"
-                    title="Clear filter"
+                    title={t("common.clear", "Clear")}
                     onClick={clearFilterText}
                   />
                 )
@@ -605,7 +610,7 @@ function Sidebar({ className }: { className?: string }) {
             <Dropdown
               items={[
                 {
-                  label: "Focus Active Request",
+                  label: t("sidebar.focusActive", "Focus Active Request"),
                   leftSlot: <Icon icon="crosshair" />,
                   onSelect: () => {
                     const activeId = jotaiStore.get(activeIdAtom);
@@ -629,14 +634,14 @@ function Sidebar({ className }: { className?: string }) {
                   },
                 },
                 {
-                  label: "Expand All Folders",
+                  label: t("sidebar.expandAll", "Expand All Folders"),
                   leftSlot: <Icon icon="chevrons_up_down" />,
                   onSelect: () => jotaiStore.set(collapsedFamily(treeId), {}),
                   hotKeyAction: "sidebar.expand_all",
                   hotKeyLabelOnly: true,
                 },
                 {
-                  label: "Collapse All Folders",
+                  label: t("sidebar.collapseAll", "Collapse All Folders"),
                   leftSlot: <Icon icon="chevrons_down_up" />,
                   onSelect: () => {
                     if (tree == null) return;

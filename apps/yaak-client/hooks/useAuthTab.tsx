@@ -8,6 +8,7 @@ import type { RadioDropdownProps } from "../components/core/RadioDropdown";
 import type { TabItem } from "../components/core/Tabs/Tabs";
 import { capitalize } from "../lib/capitalize";
 import { showConfirm } from "../lib/confirm";
+import { t } from "../lib/i18n";
 import { resolvedModelName } from "../lib/resolvedModelName";
 import { useHttpAuthenticationSummaries } from "./useHttpAuthentication";
 import type { AuthenticatedModel } from "./useInheritedAuthentication";
@@ -25,7 +26,7 @@ export function useAuthTab<T extends string>(
 
     const tab: TabItem = {
       value: tabValue,
-      label: "Auth",
+      label: t("request.tabs.auth", "Auth"),
       options,
     };
 
@@ -54,7 +55,7 @@ export function useAuthDropdownOptions(
         })),
         { type: "separator" },
         {
-          label: "Inherit from Parent",
+          label: t("request.auth.inherit", "Inherit from Parent"),
           shortLabel:
             inheritedAuth != null &&
             inheritedAuth.authenticationType !== "none" ? (

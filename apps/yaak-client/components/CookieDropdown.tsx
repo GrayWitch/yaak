@@ -4,6 +4,7 @@ import { memo, useMemo } from "react";
 import { useActiveCookieJar } from "../hooks/useActiveCookieJar";
 import { useCreateCookieJar } from "../hooks/useCreateCookieJar";
 import { deleteModelWithConfirm } from "../lib/deleteModelWithConfirm";
+import { t } from "../lib/i18n";
 import { showPrompt } from "../lib/prompt";
 import { setWorkspaceSearchParams } from "../lib/setWorkspaceSearchParams";
 import { CookieDialog } from "./CookieDialog";
@@ -31,7 +32,7 @@ export const CookieDropdown = memo(function CookieDropdown() {
             { type: "separator", label: activeCookieJar.name },
             {
               key: "manage",
-              label: "Manage Cookies",
+              label: t("workspace.manageCookies", "Manage Cookies"),
               leftSlot: <Icon icon="cookie" />,
               onSelect: () => {
                 if (activeCookieJar == null) return;
@@ -40,19 +41,19 @@ export const CookieDropdown = memo(function CookieDropdown() {
             },
             {
               key: "rename",
-              label: "Rename",
+              label: t("common.rename", "Rename"),
               leftSlot: <Icon icon="pencil" />,
               onSelect: async () => {
                 const name = await showPrompt({
                   id: "rename-cookie-jar",
-                  title: "Rename Cookie Jar",
+                  title: t("dialogs.renameTitle", "Rename Cookie Jar"),
                   description: (
                     <>
                       Enter a new name for <InlineCode>{activeCookieJar?.name}</InlineCode>
                     </>
                   ),
-                  label: "Name",
-                  confirmText: "Save",
+                  label: t("common.name", "Name"),
+                  confirmText: t("common.save", "Save"),
                   placeholder: "New name",
                   defaultValue: activeCookieJar?.name,
                 });
@@ -63,7 +64,7 @@ export const CookieDropdown = memo(function CookieDropdown() {
             ...(((cookieJars ?? []).length > 1 // Never delete the last one
               ? [
                   {
-                    label: "Delete",
+                    label: t("common.delete", "Delete"),
                     leftSlot: <Icon icon="trash" />,
                     color: "danger",
                     onSelect: async () => {
