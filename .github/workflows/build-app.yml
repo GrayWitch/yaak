@@ -64,15 +64,27 @@ jobs:
           YAAK_TARGET_ARCH: x64
 
       - name: Build Tauri Bundle
-        run: node scripts/run-build.mjs client --bundles nsis,msi
+        shell: bash
+        run: node scripts/run-build.mjs client --config crates-tauri/yaak-app-client/tauri.release.conf.json --no-sign --config '{"bundle":{"createUpdaterArtifacts":false,"windows":{"signCommand":null}}}' --bundles nsis
+
+      - name: Inspect and collect Windows artifacts
+        shell: bash
+        run: |
+          mkdir -p dist-output
+          # Collect NSIS setup installer / MSI from target bundle directory
+          find target/release/bundle -type f \( -name "*.exe" -o -name "*.msi" \) -exec cp -v {} dist-output/ \; || true
+          # Also copy the standalone yaak.exe as portable if it exists
+          if [ -f "target/release/yaak.exe" ]; then
+            cp -v target/release/yaak.exe dist-output/yaak-portable.exe || true
+          fi
+          echo "=== Collected Windows artifacts ==="
+          ls -la dist-output/
 
       - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: yaak-windows-x64
-          path: |
-            crates-tauri/yaak-app-client/target/release/bundle/nsis/*.exe
-            crates-tauri/yaak-app-client/target/release/bundle/msi/*.msi
+          path: dist-output/*
           if-no-files-found: error
 
   build-macos:
@@ -126,14 +138,25 @@ jobs:
           YAAK_TARGET_ARCH: ${{ matrix.arch }}
 
       - name: Build Tauri Bundle
-        run: node scripts/run-build.mjs client --target ${{ matrix.target }} --bundles dmg
+        run: node scripts/run-build.mjs client --target ${{ matrix.target }} --config crates-tauri/yaak-app-client/tauri.release.conf.json --no-sign --config '{"bundle":{"createUpdaterArtifacts":false}}' --bundles dmg
+
+      - name: Inspect and collect macOS artifacts
+        shell: bash
+        run: |
+          mkdir -p dist-output
+          find target -type f -name "*.dmg" -exec cp -v {} dist-output/ \; || true
+          if [ -z "$(ls -A dist-output 2>/dev/null)" ]; then
+            find target -maxdepth 4 -type f -name "yaak" -exec cp -v {} dist-output/ \; || true
+          fi
+          echo "=== Collected macOS artifacts ==="
+          ls -la dist-output/
 
       - name: Upload macOS Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: yaak-macos-${{ matrix.arch }}
-          path: crates-tauri/yaak-app-client/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
-          if-no-files-found: warn
+          path: dist-output/*
+          if-no-files-found: error
 
   build-linux:
     name: Build Linux (x64)
@@ -182,16 +205,25 @@ jobs:
           YAAK_TARGET_ARCH: x64
 
       - name: Build Tauri Bundle
-        run: node scripts/run-build.mjs client --bundles deb,appimage
+        run: node scripts/run-build.mjs client --config crates-tauri/yaak-app-client/tauri.release.conf.json --no-sign --config '{"bundle":{"createUpdaterArtifacts":false}}' --bundles deb,appimage
+
+      - name: Inspect and collect Linux artifacts
+        shell: bash
+        run: |
+          mkdir -p dist-output
+          find target/release/bundle -type f \( -name "*.deb" -o -name "*.AppImage" \) -exec cp -v {} dist-output/ \; || true
+          if [ -z "$(ls -A dist-output 2>/dev/null)" ]; then
+            find target/release -maxdepth 1 -type f -name "yaak" -exec cp -v {} dist-output/ \; || true
+          fi
+          echo "=== Collected Linux artifacts ==="
+          ls -la dist-output/
 
       - name: Upload Linux Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: yaak-linux-x64
-          path: |
-            crates-tauri/yaak-app-client/target/release/bundle/deb/*.deb
-            crates-tauri/yaak-app-client/target/release/bundle/appimage/*.AppImage
-          if-no-files-found: warn
+          path: dist-output/*
+          if-no-files-found: error
 
   release:
     name: Create GitHub Release
